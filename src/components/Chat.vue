@@ -3,8 +3,12 @@
     <div class="container">
       <div class="room">
         <div class="room-head">
+          <i class="fa fa-arrow-left"></i>
           <img src="../assets/messenger.png" class="logo" alt="logo">
           <h1>{{name}}</h1>
+          <i class="fa fa-phone"></i>
+          <i class="fas fa-video"></i>
+          <i class="fa fa-exclamation-circle"></i>
         </div>
         <div class="messages" v-chat-scroll>
           
@@ -25,8 +29,17 @@
           
         </div>
         <div class="enter-msg">
+          <i class="fas fa-th-large"></i>
+          <i class="fa fa-camera"></i>
+          <i class="far fa-image"></i>
+          <i class="fa fa-microphone"></i>
+          <form @submit.prevent="addmsg">
           <input type="text" class="chat-input" v-model="newmessage">
-          <button class="btn" @click="addmsg"> > </button>
+          <button type="submit">
+            <i v-if="this.newmessage == ''" class="fas fa-thumbs-up"></i>
+            <i v-else type="submit" class="fas fa-location-arrow"></i>
+          </button>
+          </form>
         </div>
       </div>
     </div>
@@ -56,17 +69,20 @@ export default {
 
   methods: {
     addmsg(){
-      console.log(this.newmessage, this.sender, this.time)
-      db.collection('messages').add({
-        name: this.sender,
-        message: this.newmessage,
-        time: this.time
-      })
-        .then(() => {
-          console.log('added successfull')
-          this.newmessage = ''
+      if(this.newmessage != ''){
+        console.log(this.newmessage, this.sender, this.time)
+        db.collection('messages').add({
+          name: this.sender,
+          message: this.newmessage,
+          time: this.time
         })
-        .catch(err => console.log(err))
+          .then(() => {
+            console.log('added successfull')
+            this.newmessage = ''
+          })
+          .catch(err => console.log(err))
+      }
+      
     }
   },
 
@@ -116,7 +132,21 @@ export default {
 .logo{
   height: 40px;
   widows: 40px;
-  margin: 0 20px
+  margin: 0 10px
+}
+
+.room-head i{
+  font-size: 19px;
+  margin: 0 10px;
+}
+
+.fa-arrow-left{
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+.room-head h1{
+  margin-right: 180px;
 }
 
 .messages{
@@ -173,29 +203,41 @@ export default {
 }
 
 .enter-msg{
-  border-top: 1px solid #444;
-  text-align: left;
+  display: flex;
+  align-items: center;
   padding: 10px;
+}
+
+.enter-msg i{
+  color: #0784c7;
+  font-size: 19px;
+  margin: 0 10px;
 }
 
 .chat-input{
   border: none;
   border: 1px solid #777;
   border-radius: 15px;
-  width: 340px;
+  width: 240px;
   height: 30px;
-  margin: 0 20px;
+  margin: 0 10px;
   font-size: 18px;
   padding: 0 10px;
 }
 
-.btn{
-  background: #0784c7;
-  color: #fff;
-  border: none;
-  padding: 10px 13px;
-  cursor: pointer;
-  border-radius: 50%;
+.chat-input:focus{
+  outline-width: 0px;
 }
+
+.enter-msg button{
+  border: none;
+  cursor: pointer;
+}
+
+.enter-msg button:focus{
+  outline-width: 0px;
+}
+
+
 </style>
 
